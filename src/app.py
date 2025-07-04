@@ -17,7 +17,7 @@ import json
 import pandas as pd
 
 # Importar el diccionario 'config' que contiene tus clases de configuración
-from config import config 
+from .config import config 
 
 # Models (Ahora deberían resolverse correctamente debido al sys.path modificado)
 from src.models.ModelUser import ModelUser
