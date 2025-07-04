@@ -1,0 +1,75 @@
+/* static/CSS/mis_mascotas.css */
+
+body {
+    background-image: url('../img/fondo_mascotas.jpg'); /* O tu imagen de fondo preferida */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-title {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.lead {
+    font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.1); /* Efecto hover en filas de la tabla */
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    color: #fff; /* Color de texto para el encabezado de la tabla */
+    background-color: #007bff; /* Color de fondo para el encabezado de la tabla */
+    border-color: #007bff;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05); /* Rayas en la tabla */
+}
+
+/* Estilos para los botones */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #545b62;
+}
+
+.alert {
+    border-radius: 8px;
+    margin-top: 15px;
+}

@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/login.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="form-signin w-100 m-auto">
+        <form action="/login" method="POST" id="loginForm">
+            <img class="mb-4" src="{{ url_for('static', filename='img/patitas.png') }}" alt="" width="200" height="150">
+            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="login-type-buttons">
+                <button type="button" id="userLoginBtn" class="btn btn-outline-primary {% if selected_type == 'user' %}active{% endif %}">Usuario</button>
+                <button type="button" id="vetLoginBtn" class="btn btn-outline-info {% if selected_type == 'veterinarian' %}active{% endif %}">Veterinario</button>
+            </div>
+
+            <input type="hidden" name="login_type" id="loginType" value="{{ selected_type if selected_type else 'user' }}">
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="username" name="username" placeholder="username" required autofocus value="{{ username if username }}">
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
+                <label for="password">Password</label>
+            </div>
+
+            <div class="form-floating mb-3 matricula-field" id="matriculaField">
+                <input type="text" class="form-control" id="matricula_profesional" name="matricula_profesional" placeholder="Matrícula Profesional" value="{{ matricula_profesional if matricula_profesional }}">
+                <label for="matricula_profesional">Matrícula Profesional</label>
+            </div>
+
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+
+            <a href="{{ url_for('register') }}" class="w-100 btn btn-lg btn-success mt-3">Register User</a>
+            {# CHANGED: Link to new veterinary_register route #}
+            <a href="{{ url_for('veterinarios_register') }}" class="w-100 btn btn-lg btn-secondary mt-3">Veterinary Register</a>
+
+            <p class="mt-5 mb-3 text-body-secondary">&copy; Todos los derechos reservados</p>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userLoginBtn = document.getElementById('userLoginBtn');
+            const vetLoginBtn = document.getElementById('vetLoginBtn');
+            const loginTypeInput = document.getElementById('loginType');
+            const matriculaField = document.getElementById('matriculaField');
+            const matriculaInput = document.getElementById('matricula_profesional');
+
+            function updateLoginForm(type) {
+                if (type === 'user') {
+                    userLoginBtn.classList.add('active');
+                    vetLoginBtn.classList.remove('active');
+                    matriculaField.style.display = 'none';
+                    matriculaInput.removeAttribute('required');
+                    loginTypeInput.value = 'user';
+                } else if (type === 'veterinarian') {
+                    userLoginBtn.classList.remove('active');
+                    vetLoginBtn.classList.add('active');
+                    matriculaField.style.display = 'block';
+                    matriculaInput.setAttribute('required', 'required');
+                    loginTypeInput.value = 'veterinarian';
+                }
+            }
+
+            updateLoginForm(loginTypeInput.value);
+
+            userLoginBtn.addEventListener('click', function() {
+                updateLoginForm('user');
+            });
+
+            vetLoginBtn.addEventListener('click', function() {
+                updateLoginForm('veterinarian');
+            });
+        });
+    </script>
+{% endblock %}

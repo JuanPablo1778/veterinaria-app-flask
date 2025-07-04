@@ -1,0 +1,123 @@
+{# templates/modificar_cita.html #}
+{% extends 'base.html' %}
+
+{% block title %}Modificar Cita{% endblock %}
+
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/agendar_cita.css') }}"> {# Puedes reutilizar el CSS de agendar_cita.css si aplica la misma estética #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-white text-center">
+                    <h2 class="mb-0"><i class="fas fa-edit me-2"></i> Modificar Cita</h2>
+                </div>
+                <div class="card-body p-4">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    {# El action del formulario apunta a la ruta de Flask para modificar la cita #}
+                    <form action="{{ url_for('modificar_cita', cita_id=cita._id) }}" method="POST">
+
+                        <div class="mb-3">
+                            <label for="nombre_mascota" class="form-label">Nombre de la Mascota <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombre_mascota" name="nombre_mascota" required
+                                   value="{{ request_form.nombre_mascota if request_form else cita.nombre_mascota }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipo_mascota" class="form-label">Tipo de Mascota <span class="text-danger">*</span></label>
+                            <select class="form-select" id="tipo_mascota" name="tipo_mascota" required>
+                                <option value="" disabled {% if not request_form and cita.tipo_mascota == '' %}selected{% endif %}>Selecciona un tipo</option>
+                                <option value="perro" {% if (request_form and request_form.tipo_mascota == 'perro') or (not request_form and cita.tipo_mascota == 'perro') %}selected{% endif %}>Perro</option>
+                                <option value="gato" {% if (request_form and request_form.tipo_mascota == 'gato') or (not request_form and cita.tipo_mascota == 'gato') %}selected{% endif %}>Gato</option>
+                                <option value="ave" {% if (request_form and request_form.tipo_mascota == 'ave') or (not request_form and cita.tipo_mascota == 'ave') %}selected{% endif %}>Ave</option>
+                                <option value="otro" {% if (request_form and request_form.tipo_mascota == 'otro') or (not request_form and cita.tipo_mascota == 'otro') %}selected{% endif %}>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="raza" class="form-label">Raza</label>
+                            <input type="text" class="form-control" id="raza" name="raza"
+                                   value="{{ request_form.raza if request_form else cita.raza if cita.raza is not none else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edad_mascota" class="form-label">Edad de la Mascota (años)</label>
+                            <input type="number" class="form-control" id="edad_mascota" name="edad_mascota" min="0"
+                                   value="{{ request_form.edad_mascota if request_form else cita.edad_mascota if cita.edad_mascota is not none else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono de Contacto</label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono"
+                                   value="{{ request_form.telefono if request_form else cita.telefono if cita.telefono is not none else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email de Contacto</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   value="{{ request_form.email if request_form else cita.email if cita.email is not none else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fecha_cita" class="form-label">Fecha y Hora de la Cita <span class="text-danger">*</span></label>
+                            {# Usamos cita.fecha_cita_str porque la formateamos en app.py para datetime-local #}
+                            <input type="datetime-local" class="form-control" id="fecha_cita" name="fecha_cita" required
+                                   value="{{ request_form.fecha_cita if request_form else cita.fecha_cita_str }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="servicio" class="form-label">Servicio Requerido <span class="text-danger">*</span></label>
+                            <select class="form-select" id="servicio" name="servicio" required>
+                                <option value="" disabled {% if not request_form and cita.servicio == '' %}selected{% endif %}>Selecciona un servicio</option>
+                                <option value="consulta" {% if (request_form and request_form.servicio == 'consulta') or (not request_form and cita.servicio == 'consulta') %}selected{% endif %}>Consulta General</option>
+                                <option value="vacunacion" {% if (request_form and request_form.servicio == 'vacunacion') or (not request_form and cita.servicio == 'vacunacion') %}selected{% endif %}>Vacunación</option>
+                                <option value="urgencia" {% if (request_form and request_form.servicio == 'urgencia') or (not request_form and cita.servicio == 'urgencia') %}selected{% endif %}>Urgencia</option>
+                                <option value="cirugia" {% if (request_form and request_form.servicio == 'cirugia') or (not request_form and cita.servicio == 'cirugia') %}selected{% endif %}>Cirugía</option>
+                                <option value="estetica" {% if (request_form and request_form.servicio == 'estetica') or (not request_form and cita.servicio == 'estetica') %}selected{% endif %}>Estética y Peluquería</option>
+                                <option value="desparasitacion" {% if (request_form and request_form.servicio == 'desparasitacion') or (not request_form and cita.servicio == 'desparasitacion') %}selected{% endif %}>Desparasitación</option>
+                                <option value="chequeo_general" {% if (request_form and request_form.servicio == 'chequeo_general') or (not request_form and cita.servicio == 'chequeo_general') %}selected{% endif %}>Chequeo General</option>
+                                <option value="otro" {% if (request_form and request_form.servicio == 'otro') or (not request_form and cita.servicio == 'otro') %}selected{% endif %}>Otro</option>
+                            </select>
+                        </div>
+
+                        {# Campo para modificar el estado de la cita #}
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado de la Cita</label>
+                            <select class="form-select" id="estado" name="estado">
+                                <option value="pendiente" {% if (request_form and request_form.estado == 'pendiente') or (not request_form and cita.estado == 'pendiente') %}selected{% endif %}>Pendiente</option>
+                                <option value="confirmada" {% if (request_form and request_form.estado == 'confirmada') or (not request_form and cita.estado == 'confirmada') %}selected{% endif %}>Confirmada</option>
+                                <option value="completada" {% if (request_form and request_form.estado == 'completada') or (not request_form and cita.estado == 'completada') %}selected{% endif %}>Completada</option>
+                                <option value="cancelada" {% if (request_form and request_form.estado == 'cancelada') or (not request_form and cita.estado == 'cancelada') %}selected{% endif %}>Cancelada</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notas" class="form-label">Notas Adicionales</label>
+                            <textarea class="form-control" id="notas" name="notas" rows="3">{{ request_form.notas if request_form else cita.notas if cita.notas is not none else '' }}</textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-save me-2"></i> Guardar Cambios</button>
+                            <a href="{{ url_for('historial_citas') }}" class="btn btn-secondary btn-lg"><i class="fas fa-times-circle me-2"></i> Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

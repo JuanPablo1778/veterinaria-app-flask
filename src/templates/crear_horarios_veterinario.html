@@ -1,0 +1,144 @@
+{# Ubicación: src/templates/crear_horarios_veterinario.html #}
+{% extends "base.html" %}
+
+{% block title %}
+    {# Dynamic title based on is_editing #}
+    {% if is_editing %}
+        Editar Horario
+    {% else %}
+        Crear Horario
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card p-4 shadow-sm mx-auto" style="max-width: 600px;">
+        <h2 class="card-title text-center mb-4">
+            {# Dynamic heading based on is_editing #}
+            {% if is_editing %}
+                Editar Horario Existente
+            {% else %}
+                Crear Nuevo Horario
+            {% endif %}
+        </h2>
+
+        {# Mensajes Flash (éxito/error) #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container mb-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            {# HIDDEN INPUT for _id: Essential for sending the ID back during an update #}
+            {# This should only be present when editing #}
+            {% if is_editing and horario and horario._id %}
+                <input type="hidden" name="_id" value="{{ horario._id }}">
+            {% endif %}
+
+            {# Dia de la Semana #}
+            <div class="mb-3">
+                <label for="dia_semana" class="form-label">Día de la Semana</label>
+                <select class="form-select" id="dia_semana" name="dia_semana" required>
+                    <option value="">Selecciona un día</option>
+                    {% set current_dia_semana = request_form.get('dia_semana') if request_form else (horario.dia_semana if horario else '') %}
+                    {% for dia in ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] %}
+                        <option value="{{ dia }}" {% if current_dia_semana == dia %}selected{% endif %}>{{ dia }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Mes #}
+            <div class="mb-3">
+                <label for="mes" class="form-label">Mes</label>
+                <select class="form-select" id="mes" name="mes" required>
+                    <option value="">Selecciona un mes</option>
+                    {% set current_mes = request_form.get('mes')|int if request_form.get('mes') else (horario.mes if horario else '') %}
+                    {% set meses_dict = {
+                        1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio',
+                        7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
+                    } %}
+                    {% for i in range(1, 13) %}
+                        <option value="{{ i }}" {% if current_mes|int == i %}selected{% endif %}>{{ meses_dict[i] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Año #}
+            <div class="mb-3">
+                <label for="anio" class="form-label">Año</label>
+                <select class="form-select" id="anio" name="anio" required>
+                    <option value="">Selecciona un año</option>
+                    {% set current_anio = request_form.get('anio')|int if request_form.get('anio') else (horario.anio if horario else datetime.now().year) %}
+                    {# Genera opciones de año desde el año actual hasta los próximos 10 años #}
+                    {% for year in range(datetime.now().year, datetime.now().year + 11) %}
+                        <option value="{{ year }}" {% if current_anio|int == year %}selected{% endif %}>{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Hora de Inicio #}
+            <div class="mb-3">
+                <label for="hora_inicio" class="form-label">Hora de Inicio</label>
+                {% set current_hora_inicio = request_form.get('hora_inicio') if request_form.get('hora_inicio') else (horario.hora_inicio if horario else '') %}
+                <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" value="{{ current_hora_inicio }}" required>
+            </div>
+
+            {# Hora de Fin #}
+            <div class="mb-3">
+                <label for="hora_fin" class="form-label">Hora de Fin</label>
+                {% set current_hora_fin = request_form.get('hora_fin') if request_form.get('hora_fin') else (horario.hora_fin if horario else '') %}
+                <input type="time" class="form-control" id="hora_fin" name="hora_fin" value="{{ current_hora_fin }}" required>
+            </div>
+
+            {# Está Disponible (Checkbox) #}
+            <div class="mb-3 form-check">
+                {# Logic: If a POST request had this checked, it will be '1' in request_form.
+                   Otherwise, check the 'horario' object's value (1 for true, 0 for false).
+                   For new forms, default to checked (true). #}
+                {% set checked_disponible = false %}
+                {% if request_form %}
+                    {% if request_form.get('esta_disponible') == '1' %}
+                        {% set checked_disponible = true %}
+                    {% elif request_form.get('esta_disponible') == '0' %} {# Explicitly un-checked in POST, so uncheck #}
+                        {% set checked_disponible = false %}
+                    {% else %} {# Default to checked if not present in request_form (e.g., if it's a GET request for a new form) #}
+                        {% set checked_disponible = true %} 
+                    {% endif %}
+                {% elif horario %} {# For initial GET request in edit mode #}
+                    {% if horario.esta_disponible == 1 %}
+                        {% set checked_disponible = true %}
+                    {% endif %}
+                {% else %} {# For initial GET request in create mode #}
+                    {% set checked_disponible = true %} 
+                {% endif %}
+
+                <input type="checkbox" class="form-check-input" id="esta_disponible" name="esta_disponible" value="1"
+                       {% if checked_disponible %}checked{% endif %}>
+                <label class="form-check-label" for="esta_disponible">Está Disponible</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                {% if is_editing %}
+                    Actualizar Horario
+                {% else %}
+                    Guardar Horario
+                {% endif %}
+            </button>
+        </form>
+
+        {# Button to return to the list of schedules #}
+        <div class="text-center mt-3">
+            <a href="{{ url_for('consultar_horarios_veterinario') }}" class="btn btn-secondary w-100">Regresar a Horarios</a>
+        </div>
+
+    </div>
+</div>
+{% endblock body %}

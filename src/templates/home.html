@@ -1,0 +1,73 @@
+{# templates/home.html #}
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/home.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-4 text-center">
+
+                    <h2 class="mb-3">¡Bienvenido, {{ current_user.nombre }} {{ current_user.apellido_paterno }} {{ current_user.apellido_materno }}!</h2>
+
+                    {# --- INICIO: Inserción del video del gato --- #}
+                    <div class="video-container mb-4"> {# Añadimos un div para centrar y controlar el margen #}
+                        <video src="{{ url_for('static', filename='video/gif_gato.mp4')}}" autoplay loop muted playsinline class="img-fluid" style="max-width: 300px; border-radius: 8px;">
+                            Tu navegador no soporta el tag de video.
+                        </video>
+                    </div>
+                    {# --- FIN: Inserción del video del gato --- #}
+
+                    <h4 class="mt-4">Veterinaria Patitas Felices</h4>
+                    <p class="lead text-muted">Servicios profesionales para tu mascota</p>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <p class="lead mt-4">¿Qué te gustaría hacer hoy?</p>
+
+                    <div class="d-grid gap-3">
+                        {# --- NUEVOS BOTONES AÑADIDOS AQUÍ --- #}
+                        <a href="{{ url_for('registrar_mascota') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-paw me-2"></i> Registrar Mascota
+                        </a>
+                        <a href="{{ url_for('mis_mascotas') }}" class="btn btn-info btn-lg text-white">
+                            <i class="fas fa-clipboard-list me-2"></i> Mis Mascotas
+                        </a>
+                        {# --- FIN DE NUEVOS BOTONES --- #}
+
+                        <a href="{{ url_for('agendar_cita') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calendar-plus me-2"></i> Agendar Nueva Cita
+                        </a>
+                        <a href="{{ url_for('historial_citas') }}" class="btn btn-info btn-lg text-white">
+                            <i class="fas fa-list-alt me-2"></i> Ver Historial de Citas
+                        </a>
+                        {# --- BOTÓN DASHBOARD --- #}
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                        <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg">
+                            <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+/* src/static/CSS/dashboard.css */
+
+/* Custom styles for dashboard cards and text */
+.card-body .fs-2 {
+    font-size: 2.2rem !important; /* Slightly larger number */
+}
+
+.card-body .fa-3x {
+    font-size: 2.8em !important; /* Slightly larger icon */
+}
+
+.chart-container {
+    position: relative;
+    height: 40vh; /* Adjust height as needed */
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 50vh; /* Taller on smaller screens for better readability */
+    }
+}

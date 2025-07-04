@@ -1,0 +1,104 @@
+{# templates/mis_mascotas.html #}
+{% extends 'base.html' %}
+
+{% block title %}Mis Mascotas{% endblock %}
+
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/mis_mascotas.css') }}"> {# Nuevo CSS para esta página #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10"> {# Aumentamos el tamaño de la columna para la tabla #}
+            <div class="card shadow-lg">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="fas fa-paw me-2"></i> Mis Mascotas Registradas
+                    </h2>
+
+                    {# Mostrar mensajes flash #}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <p class="lead text-center mb-4">
+                        ¡Estas son tus mascotas registradas, **{{ current_user.nombre }} {{ current_user.apellido_paterno }} {{ current_user.apellido_materno }}**
+                    </p>
+
+                    {% if mascotas %}
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Especie</th>
+                                        <th>Raza</th>
+                                        <th>Sexo</th>
+                                        <th>Edad</th>
+                                        <th>Color</th>
+                                        <th>Nacimiento</th>
+                                        <th>Notas</th>
+                                        {# Puedes añadir una columna para acciones si más adelante quieres editar/eliminar #}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for mascota in mascotas %}
+                                    <tr>
+                                        <td>{{ mascota.nombre }}</td>
+                                        <td>{{ mascota.especie|capitalize }}</td> {# capitaliza la primera letra #}
+                                        <td>{{ mascota.raza if mascota.raza else 'N/A' }}</td>
+                                        <td>{{ mascota.sexo|capitalize if mascota.sexo else 'N/A' }}</td>
+                                        <td>{{ mascota.edad if mascota.edad is not none else 'N/A' }}</td>
+                                        <td>{{ mascota.color if mascota.color else 'N/A' }}</td>
+                                        <td>
+                                            {% if mascota.fecha_nacimiento %}
+                                                {{ mascota.fecha_nacimiento.strftime('%d/%m/%Y') }}
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if mascota.notas %}
+                                                {# Limita la longitud de las notas si son muy largas #}
+                                                <span title="{{ mascota.notas }}">
+                                                    {{ mascota.notas[:50] }}
+                                                    {% if mascota.notas|length > 50 %}...{% endif %}
+                                                </span>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info text-center" role="alert">
+                            Aún no tienes mascotas registradas. ¡Anímate a añadir la primera!
+                        </div>
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{{ url_for('registrar_mascota') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus-circle me-2"></i> Registrar Nueva Mascota
+                        </a>
+                        <a href="{{ url_for('home') }}" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i> Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

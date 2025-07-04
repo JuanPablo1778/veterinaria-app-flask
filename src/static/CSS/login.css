@@ -1,0 +1,86 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    /* --- MODIFICACIÓN CLAVE PARA EL FONDO --- */
+    background: url("../img/nubes.webp") no-repeat center center fixed; /* Cambiado de background-color */
+    background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+    /* --- FIN MODIFICACIÓN CLAVE --- */
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    /* --- MODIFICACIÓN CLAVE PARA LA CAJA DEL FORMULARIO --- */
+    background-color: rgba(255, 255, 255, 0.7); /* Blanco con 70% de opacidad */
+    border-radius: 10px; /* Opcional: para darle esquinas redondeadas si no las tiene */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Opcional: para darle una sombra */
+    /* --- FIN MODIFICACIÓN CLAVE --- */
+}
+
+.form-signin .form-floating:focus-within {
+    z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Opcional: Si el texto "Please sign in" o las etiquetas de los inputs no son legibles,
+    puedes añadir esto para darles un color oscuro. */
+.form-signin .h3,
+.form-signin label {
+    color: #333; /* Un color oscuro para el texto */
+    /* text-shadow: 1px 1px 2px rgba(255,255,255,0.8); */ /* Opcional: para legibilidad sobre fondo claro */
+}
+
+/* Opcional: Para que los campos de entrada también tengan un fondo ligeramente transparente */
+.form-signin .form-floating input {
+    background-color: rgba(255, 255, 255, 0.9); /* Más opaco para que se vea bien al escribir */
+}
+
+/* --- ESTILOS MOVIDOS DE login.html --- */
+.login-type-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.login-type-buttons button {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #007bff;
+    background-color: #f8f9fa;
+    color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.login-type-buttons button.active {
+    background-color: #007bff;
+    color: white;
+}
+.login-type-buttons button:hover:not(.active) {
+    background-color: #e2f0ff;
+}
+.matricula-field {
+    display: none;
+}
+/* --- FIN ESTILOS MOVIDOS --- */

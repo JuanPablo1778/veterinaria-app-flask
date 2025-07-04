@@ -1,0 +1,95 @@
+{# templates/registrar_mascota.html #}
+{% extends 'base.html' %}
+
+{% block title %}Registrar Nueva Mascota{% endblock %}
+
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/registrar_mascota.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="fas fa-paw me-2"></i> Registrar Nueva Mascota
+                    </h2>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('registrar_mascota') }}">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre de la Mascota <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required 
+                                value="{{ request_form.nombre if request_form else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="especie" class="form-label">Especie <span class="text-danger">*</span></label>
+                            <select class="form-select" id="especie" name="especie" required>
+                                <option value="">Selecciona una especie</option>
+                                <option value="perro" {% if request_form and request_form.especie == 'perro' %}selected{% endif %}>Perro</option>
+                                <option value="gato" {% if request_form and request_form.especie == 'gato' %}selected{% endif %}>Gato</option>
+                                <option value="ave" {% if request_form and request_form.especie == 'ave' %}selected{% endif %}>Ave</option>
+                                <option value="otro" {% if request_form and request_form.especie == 'otro' %}selected{% endif %}>Otro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="raza" class="form-label">Raza</label>
+                            <input type="text" class="form-control" id="raza" name="raza" 
+                                value="{{ request_form.raza if request_form else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select" id="sexo" name="sexo">
+                                <option value="desconocido" {% if request_form and request_form.sexo == 'desconocido' %}selected{% endif %}>Desconocido</option>
+                                <option value="macho" {% if request_form and request_form.sexo == 'macho' %}selected{% endif %}>Macho</option>
+                                <option value="hembra" {% if request_form and request_form.sexo == 'hembra' %}selected{% endif %}>Hembra</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edad" class="form-label">Edad (años)</label>
+                            <input type="number" class="form-control" id="edad" name="edad" min="0" max="30"
+                                value="{{ request_form.edad if request_form else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="color" class="form-label">Color</label>
+                            <input type="text" class="form-control" id="color" name="color" 
+                                value="{{ request_form.color if request_form else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento"
+                                value="{{ request_form.fecha_nacimiento if request_form else '' }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="notas" class="form-label">Notas Adicionales</label>
+                            <textarea class="form-control" id="notas" name="notas" rows="3">{{ request_form.notas if request_form else '' }}</textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg mt-3">
+                                <i class="fas fa-save me-2"></i> Registrar Mascota
+                            </button>
+                            <a href="{{ url_for('home') }}" class="btn btn-secondary btn-lg mt-2">
+                                <i class="fas fa-arrow-left me-2"></i> Volver al Inicio
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

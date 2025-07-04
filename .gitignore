@@ -1,0 +1,17 @@
+# Virtual Environment
+.env/
+env/
+venv/
+*.env
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+
+# VS Code specific files (optional, but good practice)
+.vscode/
+
+# Any sensitive config files (if you ever create them)
+config.local.py
+*.sqlite3 # If you were to use SQLite
+

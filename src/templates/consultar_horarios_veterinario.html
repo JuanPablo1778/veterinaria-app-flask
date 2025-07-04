@@ -1,0 +1,86 @@
+{# Ubicación: src/templates/consultar_horarios_veterinario.html #}
+{% extends "base.html" %}
+
+{% block title %}Consultar Horarios{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card p-4 shadow-sm mx-auto" style="max-width: 900px;">
+        <h2 class="card-title text-center mb-4">Mis Horarios Registrados</h2>
+
+        {# Mensajes Flash #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container mb-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if horarios %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Mes</th>
+                        <th>Año</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Disponible</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for horario in horarios %}
+                    <tr>
+                        <td>{{ horario.dia_semana }}</td>
+                        <td>
+                            {# Mapea el número del mes a su nombre #}
+                            {% set meses_dict = {
+                                1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio',
+                                7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
+                            } %}
+                            {{ meses_dict.get(horario.mes, 'Desconocido') }}
+                        </td>
+                        <td>{{ horario.anio }}</td>
+                        {# Ahora usamos las nuevas propiedades para la visualización #}
+                        <td>{{ horario.hora_inicio_display }}</td>
+                        <td>{{ horario.hora_fin_display }}</td>
+                        <td>
+                            {% if horario.esta_disponible %} {# Se cambió == 1 por solo la variable booleana #}
+                                <span class="badge bg-success">Sí</span>
+                            {% else %}
+                                <span class="badge bg-danger">No</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {# Botones para editar y eliminar - ¡listos para la implementación! #}
+                            {# Necesitarás una ruta en app.py como /veterinarios/horarios/editar/<horario_id> #}
+                            <a href="{{ url_for('editar_horario_veterinario', horario_id=horario._id) }}" class="btn btn-sm btn-warning" title="Editar horario">Editar</a>
+                            {# Necesitarás una ruta en app.py como /veterinarios/horarios/eliminar/<horario_id> #}
+                            <form action="{{ url_for('eliminar_horario_veterinario', horario_id=horario._id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este horario?');">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Eliminar horario">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No hay horarios registrados para este veterinario.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('crear_horarios_veterinario') }}" class="btn btn-success">Crear Nuevo Horario</a>
+            <a href="{{ url_for('home_veterinarios') }}" class="btn btn-secondary">Volver al Inicio</a>
+        </div>
+    </div>
+</div>
+{% endblock body %}

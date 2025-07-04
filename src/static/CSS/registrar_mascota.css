@@ -1,0 +1,67 @@
+/* static/CSS/registrar_mascota.css */
+
+body {
+    /* Puedes usar una imagen de fondo similar a tu home.css o elegir una nueva */
+    background-image: url('../img/fondo_mascotas.jpg'); /* Asegúrate de que la ruta sea correcta a tu imagen */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Para que el fondo no se mueva al hacer scroll */
+    min-height: 100vh; /* Asegura que el fondo cubra toda la altura */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco semitransparente para el contenedor */
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-title {
+    color: #007bff; /* Color azul para el título, ajusta según tu paleta */
+    font-weight: bold;
+}
+
+/* Opcional: Estilos para los campos de formulario si quieres algo más específico */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #545b62;
+}
+
+.alert {
+    border-radius: 8px;
+    margin-top: 15px;
+}

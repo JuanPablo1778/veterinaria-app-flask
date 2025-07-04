@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Veterinarios Dashboard{% endblock %}
+
+{% block customCSS %}
+    {# Referencia exclusiva a home_veterinarios.css #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/home_veterinarios.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container welcome-card">
+        {% if current_user.is_authenticated %}
+            {# Check if the user is an instance of Veterinarios (our specific class) #}
+            {% if current_user.__class__.__name__ == 'Veterinarios' %}
+                <h2 class="mb-3">¡Bienvenido, Dr./Dra. {{ current_user.nombre }} {{ current_user.apellido_paterno }}!</h2>
+                <p>Usted ha iniciado sesión como Veterinario.</p>
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    {# Botones para las nuevas opciones #}
+                    <a href="{{ url_for('crear_horarios_veterinario') }}" class="btn btn-info btn-lg mt-3">Crear Horarios</a>
+                    <a href="{{ url_for('consultar_horarios_veterinario') }}" class="btn btn-secondary btn-lg mt-3">Consultar Horarios</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-lg mt-3">Cerrar Sesión</a>
+                </div>
+            {% else %}
+                {# Fallback if somehow a non-veterinarian user lands here #}
+                <h2 class="mb-3">¡Bienvenido!</h2>
+                <p>Contenido solo para veterinarios.</p>
+                <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg mt-3">Ir a la Página Principal</a>
+            {% endif %}
+        {% else %}
+            <p>Por favor, inicie sesión.</p>
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Iniciar Sesión</a>
+        {% endif %}
+    </div>
+{% endblock %}
