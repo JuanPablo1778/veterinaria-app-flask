@@ -501,19 +501,21 @@ def logout():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'] # Contraseña en texto plano
         nombre = request.form['nombre']
         apellido_paterno = request.form['apellido_paterno']
         apellido_materno = request.form.get('apellido_materno', None)
         telefono = request.form.get('telefono', None)
         email = request.form.get('email', None)
 
-        hashed_password = User.generate_password(password)
+        # ELIMINA ESTA LÍNEA (o coméntala):
+        # hashed_password = User.generate_password(password) 
 
-        # _id=None para que MongoDB genere uno nuevo
-        new_user = User(_id=None, username=username, password=hashed_password, 
-                        nombre=nombre, apellido_paterno=apellido_paterno, 
-                        apellido_materno=apellido_materno, telefono=telefono, email=email)
+        # Crea el objeto User pasando la CONTRASEÑA EN TEXTO PLANO
+        # ModelUser.register se encargará de hashearla antes de guardarla
+        new_user = User(_id=None, username=username, password=password, # <--- ¡CAMBIO CLAVE AQUÍ!
+                                 nombre=nombre, apellido_paterno=apellido_paterno, 
+                                 apellido_materno=apellido_materno, telefono=telefono, email=email)
 
         if ModelUser.register(db, new_user):
             flash('Usuario registrado con éxito. ¡Ya puedes iniciar sesión!', 'success')
